@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Previdência Complementar</title>
-    <!-- Tailwind CSS para design moderno e responsivo no mobile -->
+    <title>Simulador Avançado de Previdência</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased p-4 sm:p-6">
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 min-h-screen text-slate-100 flex items-center justify-center p-4 sm:p-6">
 
-    <div class="max-w-xl mx-auto bg-white p-5 sm:p-8 rounded-2xl shadow-xl">
+    <div class="w-full max-w-xl bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
         
         <!-- Cabeçalho -->
         <header class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-slate-900">Simulador de Previdência</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Perfil: RGPS (INSS) | CLT[cite: 1]</p>
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600/20 text-blue-400 mb-3 shadow-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">Simulador de Previdência</h1>
+            <p class="text-xs text-slate-400 mt-1">Planejamento Inteligente para RGPS (INSS) & CLT[cite: 1]</p>
         </header>
 
         <!-- Alerta Informativo -->
-        <div class="bg-blue-50 border-l-4 border-blue-600 p-3.5 rounded-r-lg text-xs sm:text-sm text-blue-900 mb-6">
-            ℹ️ **Dica:** Escolha o produto, o prazo e simule o impacto na sua renda mensal. Tributação **Regressiva (10% após 10 anos)**[cite: 1].
+        <div class="bg-blue-950/50 border border-blue-500/30 p-3.5 rounded-2xl text-xs text-blue-300 mb-6 flex items-start gap-3">
+            <span class="text-base">💡</span>
+            <div>
+                <strong class="text-white font-medium">Dica de Ouro:</strong> Selecione o produto e o prazo de recebimento. Simulação considerando Tributação <strong>Regressiva (10% após 10 anos)</strong>[cite: 1].
+            </div>
         </div>
 
         <!-- Formulário -->
@@ -27,8 +40,8 @@
             
             <!-- Produto -->
             <div>
-                <label for="produto" class="block font-semibold text-sm mb-1 text-slate-700">Produto / Fundo de Previdência:</label>
-                <select id="produto" onchange="atualizarProdutoInfo()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <label for="produto" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Produto / Fundo de Previdência</label>
+                <select id="produto" onchange="atualizarProdutoInfo()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                     <option value="9.5" 
                         data-saque="Resgate Total, Resgates Parciais Programados, Renda Mensal Temporária e Renda Vitalícia simples." 
                         data-link="https://www.xpi.com.br">Trend Pós-Fixado XP Seguros Prev FIC RF (XP)</option>
@@ -52,44 +65,43 @@
                         data-link="https://banco.bradesco">Bradesco FIC Renda Fixa Previdenciário (Bradesco)</option>
                 </select>
                 
-                <div id="saqueInfo" class="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700">
+                <div id="saqueInfo" class="mt-2 p-3 bg-slate-800/40 border border-slate-800 rounded-xl text-xs text-slate-300">
                     <strong>Formas de Saque:</strong> Carregando...
                 </div>
-                <div id="linkInfo" class="mt-1.5 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700">
+                <div id="linkInfo" class="mt-1.5 p-2.5 bg-slate-800/40 border border-slate-800 rounded-xl text-xs text-slate-300">
                     <strong>Link Direto:</strong> Carregando...
                 </div>
             </div>
 
             <!-- Modalidade -->
             <div>
-                <label for="modalidade" class="block font-semibold text-sm mb-1 text-slate-700">Modalidade (Forma):</label>
-                <select id="modalidade" onchange="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <label for="modalidade" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Modalidade Tributária</label>
+                <select id="modalidade" onchange="calcular()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                     <option value="VGBL">VGBL (Simplificado / Isento - IR sobre rendimento)</option>
                     <option value="PGBL">PGBL (Completa - Dedução até 12% da renda)</option>
                 </select>
             </div>
 
-            <!-- Grid de Inputs Numéricos -->
+            <!-- Grid Inputs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="aporte" class="block font-semibold text-sm mb-1 text-slate-700">Aporte Mensal (R$):</label>
-                    <input type="number" id="aporte" value="500" min="50" step="50" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label for="aporte" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Aporte Mensal (R$)</label>
+                    <input type="number" id="aporte" value="500" min="50" step="50" oninput="calcular()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
                 <div>
-                    <label for="anos" class="block font-semibold text-sm mb-1 text-slate-700">Prazo Acumulação (Anos):</label>
-                    <input type="number" id="anos" value="20" min="1" max="50" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label for="anos" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Prazo Acumulação (Anos)</label>
+                    <input type="number" id="anos" value="20" min="1" max="50" oninput="calcular()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
             </div>
 
-            <!-- Rentabilidade e Prazo de Saque -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="rentabilidade" class="block font-semibold text-sm mb-1 text-slate-700">Rentabilidade (% a.a.):</label>
-                    <input type="number" id="rentabilidade" value="9.5" min="1" max="30" step="0.1" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label for="rentabilidade" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Rentabilidade (% a.a.)</label>
+                    <input type="number" id="rentabilidade" value="9.5" min="1" max="30" step="0.1" oninput="calcular()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                 </div>
                 <div>
-                    <label for="prazoSaque" class="block font-semibold text-sm mb-1 text-slate-700">Prazo de Saque (Renda):</label>
-                    <select id="prazoSaque" onchange="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <label for="prazoSaque" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Prazo de Saque (Renda)</label>
+                    <select id="prazoSaque" onchange="calcular()" class="w-full p-3.5 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                         <option value="15">15 Anos</option>
                         <option value="20" selected>20 Anos</option>
                         <option value="25">25 Anos</option>
@@ -101,35 +113,35 @@
         </div>
 
         <!-- Seção de Resultados -->
-        <div class="mt-8 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
-            <h2 class="font-bold text-base text-slate-900 border-b border-slate-200 pb-2">Resultados da Projeção</h2>
+        <div class="mt-8 bg-slate-800/50 border border-slate-700/60 p-5 rounded-3xl space-y-3.5">
+            <h2 class="font-bold text-sm uppercase tracking-wider text-slate-300 border-b border-slate-700/60 pb-2">Resultados da Projeção</h2>
             
             <div class="flex justify-between text-sm">
-                <span class="text-slate-600">Total Investido:</span>
-                <span id="resTotalInvestido" class="font-medium">R$ 0,00</span>
+                <span class="text-slate-400">Total Investido:</span>
+                <span id="resTotalInvestido" class="font-medium text-slate-200">R$ 0,00</span>
             </div>
             <div class="flex justify-between text-sm">
-                <span class="text-slate-600">Rendimento Bruto:</span>
-                <span id="resRendimento" class="font-medium">R$ 0,00</span>
+                <span class="text-slate-400">Rendimento Bruto:</span>
+                <span id="resRendimento" class="font-medium text-slate-200">R$ 0,00</span>
             </div>
             <div class="flex justify-between text-sm">
-                <span class="text-slate-600">Montante Bruto:</span>
-                <span id="resBruto" class="font-medium">R$ 0,00</span>
+                <span class="text-slate-400">Montante Bruto:</span>
+                <span id="resBruto" class="font-medium text-slate-200">R$ 0,00</span>
             </div>
             <div class="flex justify-between text-sm">
-                <span class="text-slate-600">Imposto de Renda (10%):</span>
-                <span id="resImposto" class="font-medium text-red-600">R$ 0,00</span>
+                <span class="text-slate-400">Imposto de Renda (10%):</span>
+                <span id="resImposto" class="font-medium text-rose-400">R$ 0,00</span>
             </div>
-            <div class="flex justify-between text-base font-bold text-blue-600 pt-2 border-t border-dashed border-slate-300">
+            <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-dashed border-slate-700">
                 <span>Valor Líquido Final:</span>
-                <span id="resLiquido">R$ 0,00</span>
+                <span id="resLiquido" class="text-emerald-400">R$ 0,00</span>
             </div>
 
             <!-- Caixa de Destaque de Renda Mensal -->
-            <div class="mt-4 bg-blue-100/60 p-4 rounded-xl border-l-4 border-blue-600">
-                <h3 id="labelSaqueSimulado" class="text-xs font-bold text-slate-700 uppercase tracking-wide">Renda Mensal Estimada (20 Anos):</h3>
-                <div id="resSaqueMensal" class="text-xl sm:text-2xl font-extrabold text-blue-700 mt-1">R$ 0,00</div>
-                <p class="text-[11px] text-slate-500 mt-1">*Amortização do saldo líquido com rendimento contínuo na fase de gozo.</p>
+            <div class="mt-4 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 p-4 rounded-2xl border border-blue-500/30 shadow-inner">
+                <h3 id="labelSaqueSimulado" class="text-xs font-semibold uppercase tracking-wider text-blue-300">Renda Mensal Estimada (20 Anos):</h3>
+                <div id="resSaqueMensal" class="text-2xl sm:text-3xl font-extrabold text-blue-400 mt-1">R$ 0,00</div>
+                <p class="text-[11px] text-slate-400 mt-1">*Amortização do saldo líquido com rendimento contínuo na fase de gozo.</p>
             </div>
         </div>
 
@@ -147,7 +159,7 @@
             document.getElementById('saqueInfo').innerHTML = `<strong>Formas de Saque:</strong> ${formasSaque}`;
             
             const linkUrl = selectedOption.getAttribute('data-link');
-            document.getElementById('linkInfo').innerHTML = `<strong>Link Direto:</strong> <a href="${linkUrl}" target="_blank" class="text-blue-600 font-semibold underline">Acessar portal ↗</a>`;
+            document.getElementById('linkInfo').innerHTML = `<strong>Link Direto:</strong> <a href="${linkUrl}" target="_blank" class="text-blue-400 font-semibold underline hover:text-blue-300">Acessar portal ↗</a>`;
             
             calcular();
         }
@@ -201,7 +213,7 @@
             document.getElementById('resBruto').innerText = formatarMoeda(montanteBruto);
             document.getElementById('resImposto').innerText = `- ${formatarMoeda(impostoRenda)}`;
             document.getElementById('resLiquido').innerText = formatarMoeda(valorLiquido);
-            document.getElementById('resSaqueMensal').innerText = formatarMoeda(rendendaMensalEstimada || rendaMensalEstimada);
+            document.getElementById('resSaqueMensal').innerText = formatarMoeda(rendaMensalEstimada);
         }
 
         window.onload = atualizarProdutoInfo;
