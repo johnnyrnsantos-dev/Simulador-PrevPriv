@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Previdência Complementar</title>
+    <!-- Tailwind CSS para design moderno e responsivo no mobile -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased p-4 sm:p-6">
+
+    <div class="max-w-xl mx-auto bg-white p-5 sm:p-8 rounded-2xl shadow-xl">
+        
+        <!-- Cabeçalho -->
+        <header class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-slate-900">Simulador de Previdência</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Perfil: RGPS (INSS) | CLT[cite: 1]</p>
+        </header>
+
+        <!-- Alerta Informativo -->
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-3.5 rounded-r-lg text-xs sm:text-sm text-blue-900 mb-6">
+            ℹ️ **Dica:** Escolha o produto, o prazo e simule o impacto na sua renda mensal. Tributação **Regressiva (10% após 10 anos)**[cite: 1].
+        </div>
+
+        <!-- Formulário -->
+        <div class="space-y-4">
+            
+            <!-- Produto -->
+            <div>
+                <label for="produto" class="block font-semibold text-sm mb-1 text-slate-700">Produto / Fundo de Previdência:</label>
+                <select id="produto" onchange="atualizarProdutoInfo()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <option value="9.5" 
+                        data-saque="Resgate Total, Resgates Parciais Programados, Renda Mensal Temporária e Renda Vitalícia simples." 
+                        data-link="https://www.xpi.com.br">Trend Pós-Fixado XP Seguros Prev FIC RF (XP)</option>
+                    <option value="10.2" 
+                        data-saque="Resgate Total/Parcial, Renda Mensal Vitalícia, Renda Vitalícia com Prazo Mínimo Garantido e Renda Reversível ao Cônjuge." 
+                        data-link="https://www.itau.com.br">Itaú Flexprev Renda Fixa LP (Itaú)</option>
+                    <option value="11.0" 
+                        data-saque="Resgate Total/Parcial flexível, Renda Temporária e Renda Vitalícia reversível para beneficiários indicados." 
+                        data-link="https://portal.icatuseguros.com.br">Sparta Previdência Icatu RF Crédito Privado (Sparta/Icatu)</option>
+                    <option value="10.5" 
+                        data-saque="Resgate Total, Resgate Parcial Programado, Renda Vitalícia e Renda Certa (Prazo Determinado)." 
+                        data-link="https://www.brasilprev.com.br">Brasilprev RT LNC FIC Multimercado CP (Brasilprev)</option>
+                    <option value="10.8" 
+                        data-saque="Resgate Total/Parcial, Renda Vitalícia, Renda Temporária e Renda Vitalícia com Garantia de Prazo (5, 10 ou 15 anos)." 
+                        data-link="https://www.portoseguro.com.br">Porto Seguro Sparta Previdência RF (Porto Seguro)</option>
+                    <option value="9.8" 
+                        data-saque="Resgate Total ou Parcelado, Renda Mensal Vitalícia e Renda Vitalícia com reversão ao cônjuge." 
+                        data-link="https://www.safra.com.br">Safra Prev Renda Fixa LP (Safra)</option>
+                    <option value="9.6" 
+                        data-saque="Resgate Total/Parcial programado, Renda Mensal Vitalícia, Renda Temporária e Renda Garantida por Prazo Certo." 
+                        data-link="https://banco.bradesco">Bradesco FIC Renda Fixa Previdenciário (Bradesco)</option>
+                </select>
+                
+                <div id="saqueInfo" class="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700">
+                    <strong>Formas de Saque:</strong> Carregando...
+                </div>
+                <div id="linkInfo" class="mt-1.5 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-700">
+                    <strong>Link Direto:</strong> Carregando...
+                </div>
+            </div>
+
+            <!-- Modalidade -->
+            <div>
+                <label for="modalidade" class="block font-semibold text-sm mb-1 text-slate-700">Modalidade (Forma):</label>
+                <select id="modalidade" onchange="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <option value="VGBL">VGBL (Simplificado / Isento - IR sobre rendimento)</option>
+                    <option value="PGBL">PGBL (Completa - Dedução até 12% da renda)</option>
+                </select>
+            </div>
+
+            <!-- Grid de Inputs Numéricos -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="aporte" class="block font-semibold text-sm mb-1 text-slate-700">Aporte Mensal (R$):</label>
+                    <input type="number" id="aporte" value="500" min="50" step="50" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label for="anos" class="block font-semibold text-sm mb-1 text-slate-700">Prazo Acumulação (Anos):</label>
+                    <input type="number" id="anos" value="20" min="1" max="50" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Rentabilidade e Prazo de Saque -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="rentabilidade" class="block font-semibold text-sm mb-1 text-slate-700">Rentabilidade (% a.a.):</label>
+                    <input type="number" id="rentabilidade" value="9.5" min="1" max="30" step="0.1" oninput="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label for="prazoSaque" class="block font-semibold text-sm mb-1 text-slate-700">Prazo de Saque (Renda):</label>
+                    <select id="prazoSaque" onchange="calcular()" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                        <option value="15">15 Anos</option>
+                        <option value="20" selected>20 Anos</option>
+                        <option value="25">25 Anos</option>
+                        <option value="30">30 Anos</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Seção de Resultados -->
+        <div class="mt-8 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
+            <h2 class="font-bold text-base text-slate-900 border-b border-slate-200 pb-2">Resultados da Projeção</h2>
+            
+            <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Total Investido:</span>
+                <span id="resTotalInvestido" class="font-medium">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Rendimento Bruto:</span>
+                <span id="resRendimento" class="font-medium">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Montante Bruto:</span>
+                <span id="resBruto" class="font-medium">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-slate-600">Imposto de Renda (10%):</span>
+                <span id="resImposto" class="font-medium text-red-600">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-blue-600 pt-2 border-t border-dashed border-slate-300">
+                <span>Valor Líquido Final:</span>
+                <span id="resLiquido">R$ 0,00</span>
+            </div>
+
+            <!-- Caixa de Destaque de Renda Mensal -->
+            <div class="mt-4 bg-blue-100/60 p-4 rounded-xl border-l-4 border-blue-600">
+                <h3 id="labelSaqueSimulado" class="text-xs font-bold text-slate-700 uppercase tracking-wide">Renda Mensal Estimada (20 Anos):</h3>
+                <div id="resSaqueMensal" class="text-xl sm:text-2xl font-extrabold text-blue-700 mt-1">R$ 0,00</div>
+                <p class="text-[11px] text-slate-500 mt-1">*Amortização do saldo líquido com rendimento contínuo na fase de gozo.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Cálculo e Dinâmica -->
+    <script>
+        function atualizarProdutoInfo() {
+            const selectProduto = document.getElementById('produto');
+            const selectedOption = selectProduto.options[selectProduto.selectedIndex];
+            
+            document.getElementById('rentabilidade').value = selectedOption.value;
+            
+            const formasSaque = selectedOption.getAttribute('data-saque');
+            document.getElementById('saqueInfo').innerHTML = `<strong>Formas de Saque:</strong> ${formasSaque}`;
+            
+            const linkUrl = selectedOption.getAttribute('data-link');
+            document.getElementById('linkInfo').innerHTML = `<strong>Link Direto:</strong> <a href="${linkUrl}" target="_blank" class="text-blue-600 font-semibold underline">Acessar portal ↗</a>`;
+            
+            calcular();
+        }
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcular() {
+            const aporteMensal = parseFloat(document.getElementById('aporte').value) || 0;
+            const anos = parseInt(document.getElementById('anos').value) || 0;
+            const taxaAnual = (parseFloat(document.getElementById('rentabilidade').value) || 0) / 100;
+            const modalidade = document.getElementById('modalidade').value;
+            const anosSaque = parseInt(document.getElementById('prazoSaque').value) || 20;
+
+            const meses = anos * 12;
+            const taxaMensal = Math.pow(1 + taxaAnual, 1 / 12) - 1;
+
+            let montanteBruto = 0;
+            let totalInvestido = aporteMensal * meses;
+
+            if (taxaMensal > 0) {
+                montanteBruto = aporteMensal * ((Math.pow(1 + taxaMensal, meses) - 1) / taxaMensal);
+            } else {
+                montanteBruto = totalInvestido;
+            }
+
+            const rendimentoBruto = Math.max(0, montanteBruto - totalInvestido);
+            
+            let impostoRenda = 0;
+            if (modalidade === 'VGBL') {
+                impostoRenda = rendimentoBruto * 0.10;
+            } else {
+                impostoRenda = montanteBruto * 0.10;
+            }
+
+            const valorLiquido = montanteBruto - impostoRenda;
+
+            const mesesSaque = anosSaque * 12;
+            let rendaMensalEstimada = 0;
+            if (taxaMensal > 0 && valorLiquido > 0) {
+                rendaMensalEstimada = valorLiquido * (taxaMensal * Math.pow(1 + taxaMensal, mesesSaque)) / (Math.pow(1 + taxaMensal, mesesSaque) - 1);
+            } else if (mesesSaque > 0) {
+                rendaMensalEstimada = valorLiquido / mesesSaque;
+            }
+
+            document.getElementById('labelSaqueSimulado').innerText = `Renda Mensal Estimada (${anosSaque} Anos):`;
+
+            document.getElementById('resTotalInvestido').innerText = formatarMoeda(totalInvestido);
+            document.getElementById('resRendimento').innerText = formatarMoeda(rendimentoBruto);
+            document.getElementById('resBruto').innerText = formatarMoeda(montanteBruto);
+            document.getElementById('resImposto').innerText = `- ${formatarMoeda(impostoRenda)}`;
+            document.getElementById('resLiquido').innerText = formatarMoeda(valorLiquido);
+            document.getElementById('resSaqueMensal').innerText = formatarMoeda(rendendaMensalEstimada || rendaMensalEstimada);
+        }
+
+        window.onload = atualizarProdutoInfo;
+    </script>
+</body>
+</html>
